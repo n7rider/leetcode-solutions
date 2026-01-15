@@ -1,17 +1,43 @@
-/**
+/*
  * Definition for singly-linked list.
  * public class ListNode {
  * int val;
  * ListNode next;
  * ListNode() {}
  * ListNode(int val) { this.val = val; }
- * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * ListNode(int val, ListNode next) { this.val = val;   this.next = next; }
  * }
+ *
+ * Notes:
+ * - Don't create output object at the class-level. This might work for the tests, but it is a bad pattern since
+ * different invocations can have odd results. Fit in the output object inside the method.
+ * - If code needs an extra init logic (like my v1), see if you can create a dummy object at the beginning to avoid
+ * this. This results in cleaner code.
  */
-class Problem_0002 {
-    ListNode outStart = null;
+public class Problem_0002 {
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode outHead = new ListNode(0);
+        ListNode out = outHead;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int sum = (l1 == null ? 0 : l1.val) +
+                    (l2 == null ? 0 : l2.val) +
+                    carry;
+
+            out.next = new ListNode(sum % 10);
+            out = out.next;
+
+            carry = sum / 10;
+
+            l1 = (l1 == null) ? null : l1.next;
+            l2 = (l2 == null) ? null : l2.next;
+        }
+        return outHead.next;
+    }
+
+    public ListNode addTwoNumbers_v1(ListNode l1, ListNode l2) {
+        ListNode outHead = new ListNode();
         ListNode out = null;
         int carry = 0;
         while (l1 != null || l2 != null || carry != 0) {
@@ -19,7 +45,7 @@ class Problem_0002 {
                     (l2 == null ? 0 : l2.val) +
                     carry;
 
-            out = prepareOutputObj(out);
+            out = prepareOutputObj(out, outHead);
 
             out.val = sum % 10;
             carry = sum / 10;
@@ -27,22 +53,17 @@ class Problem_0002 {
             l1 = (l1 == null) ? null : l1.next;
             l2 = (l2 == null) ? null : l2.next;
         }
-        return outStart;
+        return outHead;
     }
 
-    private void setOutStart(ListNode listNode) {
-        this.outStart = listNode;
-    }
-
-    private ListNode prepareOutputObj(ListNode listNode) {
-        if (listNode == null) {
-            listNode = new ListNode();
-            setOutStart(listNode);
+    private ListNode prepareOutputObj(ListNode out, ListNode outHead) {
+        if (out == null) {
+            out = outHead;
         } else {
-            listNode.next = new ListNode();
-            listNode = listNode.next;
+            out.next = new ListNode();
+            out = out.next;
         }
-        return listNode;
+        return out;
     }
 
     public static void main() {
