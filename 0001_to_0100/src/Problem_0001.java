@@ -61,7 +61,7 @@ public class Problem_0001 {
                         return new int[] { idxByValMap.get(key).get(0), idxByValMap.get(key).get(1) };
                     }
                 } else {
-                    return new int[]{idxByValMap.get(key).getFirst(), idxByValMap.get(otherNum).getFirst()};
+                    return new int[]{idxByValMap.get(key).get(0), idxByValMap.get(otherNum).get(0)};
                 }
             }
         }
