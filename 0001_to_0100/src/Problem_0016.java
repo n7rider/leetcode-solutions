@@ -43,11 +43,12 @@ public class Problem_0016 {
     public static void main(String[] args) {
         Problem_0016 obj = new Problem_0016();
         // Becomes -4, -1, 1, 2 on sorted.
-        System.out.println(obj.threeSumClosest(new int[] {-1, 2, 1, -4}, 1));
+//        System.out.println(obj.threeSumClosest(new int[] {-1, 2, 1, -4}, 1));
 //        System.out.println(obj.threeSumClosest(new int[] {0, 0, 0}, 1));
 //        System.out.println(obj.threeSumClosest(new int[] {10,20,30,40,50,60,70,80,90}, 1));
 //        System.out.println(obj.threeSumClosest(new int[] {0, 1, 2}, 0));
-        System.out.println(obj.threeSumClosest(new int[] {2,3,8,9,10}, 16));
+//        System.out.println(obj.threeSumClosest(new int[] {2,3,8,9,10}, 16));
+        System.out.println(obj.threeSumClosest(new int[] {2,5,6,7}, 16));
     }
 
     public int threeSumClosest(int[] nums, int target) {
@@ -74,11 +75,11 @@ public class Problem_0016 {
         int numReq = target - tempSum;
 
         int currClosestThirdNum = nums[num1Idx + 1];
-        return binarySearch(nums, numReq, num1Idx, num2Idx, currClosestThirdNum);
+        return binarySearch(nums, numReq, num1Idx + 1, num2Idx - 1, currClosestThirdNum);
     }
 
     int binarySearch(int[] nums, int numReq, int num1Idx, int num2Idx, int currClosestThirdNum) {
-        if(num1Idx >= num2Idx) {
+        if(num1Idx > num2Idx) {
             return currClosestThirdNum;
         }
 
@@ -148,5 +149,15 @@ binarySearch(sum, target, outputVal+List, arr, a, b)
         if(idealNeededHere > 0 && idealNeededHere <= arr[mid] == false)
             binarySearcH(..., mid+1, right)
 
+Inputs on the code:
+Watch out for boundary even before starting binary search too.
+
+After comparing with ChatGPT:
+Adding binary search in addition to the sort and for-loops adds an additional (* O log n) to the output.
+
+My idea was to use the binary search to find the num closest to (target - sum of 1 + 2). However, the ChatGPT solution
+is much simpler, it goes from left for num2, right for num3. And it does left++ or right-- based on how close the number
+is to the target. I probably should have thought of the solution with emphasis that the array is sorted. I wasn't a big fan
+of the boundaries-based approach in the previous example, but it's ideal for this solution
 
  */
