@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.List;
+
 /*
 16. 3Sum Closest
 Medium
@@ -37,6 +40,68 @@ Constraints:
 
  */
 public class Problem_0016 {
+    public static void main(String[] args) {
+        Problem_0016 obj = new Problem_0016();
+        // Becomes -4, -1, 1, 2 on sorted.
+//        System.out.println(obj.threeSumClosest(new int[] {-1, 2, 1, -4}, 1));
+//        System.out.println(obj.threeSumClosest(new int[] {0, 0, 0}, 1));
+//        System.out.println(obj.threeSumClosest(new int[] {10,20,30,40,50,60,70,80,90}, 1));
+//        System.out.println(obj.threeSumClosest(new int[] {0, 1, 2}, 0));
+//        System.out.println(obj.threeSumClosest(new int[] {2,3,8,9,10}, 16));
+        System.out.println(obj.threeSumClosest(new int[] {2,5,6,7}, 16));
+    }
+
+    public int threeSumClosest(int[] nums, int target) {
+        // Validate nums is not null and len is at least 3
+
+        Arrays.sort(nums);
+        int closestSum = nums[0] + nums[1] + nums[2];
+        for(int i = 0; i < nums.length - 2; i++) {
+            // Start from i + 2, we need a triplet, so the other num has to come from the middle
+            for(int j = i + 2; j < nums.length; j++) {
+                int currClosestThirdNum = findClosestThirdNum(nums, i, j, target);
+                int currSum = nums[i] + nums[j] + currClosestThirdNum;
+                if(Math.abs(target - (nums[i] + nums[j] + currClosestThirdNum)) < Math.abs(target - closestSum)) {
+                    System.out.printf("Closest is set. %d + %d + %d = %d\n", nums[i], nums[j], currClosestThirdNum, currSum);
+                    closestSum = currSum;
+                }
+            }
+        }
+        return closestSum;
+    }
+
+    int findClosestThirdNum(int[] nums, int num1Idx, int num2Idx, int target) {
+        int tempSum = nums[num1Idx] + nums[num2Idx];
+        int numReq = target - tempSum;
+
+        int currClosestThirdNum = nums[num1Idx + 1];
+        return binarySearch(nums, numReq, num1Idx + 1, num2Idx - 1, currClosestThirdNum);
+    }
+
+    int binarySearch(int[] nums, int numReq, int num1Idx, int num2Idx, int currClosestThirdNum) {
+        if(num1Idx > num2Idx) {
+            return currClosestThirdNum;
+        }
+
+        int mid = (num1Idx + num2Idx) / 2;
+        if(nums[mid] == numReq) {
+            return numReq;
+        }
+        // Set mid as the closest so far if it's closer to numsReq than the current
+        if(Math.abs(numReq - nums[mid]) < Math.abs(numReq - currClosestThirdNum)) {
+            currClosestThirdNum = nums[mid];
+        }
+
+        // Imagine a series ..... -1, 0, [1], 2, 3, 50......
+        // and it will take several times to reach 3 which is the closestNum
+        // However, since the array is sorted, we know which way to go
+        // If the order is 0........ arr[mid] .... numReq... end, we go right
+        if(nums[mid] < numReq) {
+            return binarySearch(nums, numReq, mid + 1, num2Idx, currClosestThirdNum);
+        } else {
+            return binarySearch(nums, numReq, num1Idx, mid - 1, currClosestThirdNum);
+        }
+    }
 }
 
 /*
@@ -84,5 +149,15 @@ binarySearch(sum, target, outputVal+List, arr, a, b)
         if(idealNeededHere > 0 && idealNeededHere <= arr[mid] == false)
             binarySearcH(..., mid+1, right)
 
+Inputs on the code:
+Watch out for boundary even before starting binary search too.
+
+After comparing with ChatGPT:
+Adding binary search in addition to the sort and for-loops adds an additional (* O log n) to the output.
+
+My idea was to use the binary search to find the num closest to (target - sum of 1 + 2). However, the ChatGPT solution
+is much simpler, it goes from left for num2, right for num3. And it does left++ or right-- based on how close the number
+is to the target. I probably should have thought of the solution with emphasis that the array is sorted. I wasn't a big fan
+of the boundaries-based approach in the previous example, but it's ideal for this solution
 
  */
